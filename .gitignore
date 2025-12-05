@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+venv/
+env/
+.env
+
+# Checkpoints & Outputs
+out/
+out-*/
+*.pt
+*.pth
+
+# Dataset Artifacts
+data/*/*.bin
+*.txt
+
+wandb/
+runs/
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
