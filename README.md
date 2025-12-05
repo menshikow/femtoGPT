@@ -19,3 +19,7 @@ I built this project to deepen my understanding of the Transformer architecture 
 * **From Scratch:** The model is defined purely in PyTorch `nn.Module`.
 * **Training Script:** Supports training on the TinyShakespeare dataset to generate infinite Shakespeare-like text.
 * **Simple:** I tried to keep it as simple as possible, without adding some extra complexity to the Karpathy's repo + tryed to ompimize some code pieces.
+
+## Install
+
+`pip install torch numpy transformers datasets tiktoken wandb tqdm`
