@@ -17,7 +17,7 @@ I built this project to deepen my understanding of the Transformer architecture 
 ## ️Features
 
 * **From Scratch:** The model is defined purely in PyTorch `nn.Module`.
-* **Training Script:** Supports training on the TinyShakespeare dataset to generate infinite Shakespeare-like text.
+* **Training:** Was trained on the 3 major works of Fyodor Dostojevsky to able to infinite generate Dostojevsky-like text.
 * **Simple:** I tried to keep it as simple as possible, without adding some extra complexity to the Karpathy's repo + tryed to ompimize some code pieces.
 
 ## Install
