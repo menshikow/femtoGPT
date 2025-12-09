@@ -4,20 +4,16 @@ import tiktoken
 from model import FemtoGPT
 import config
 
-# setup device
+# configuration
 device = config.detect_divce()
 
-# sampling settings
-start_prompt = "\n"
-num_samples = 3
-max_new_tokens = 500
-top_k = 200  # keep only the top 200 likly next words
-temperature = 0.8
+# load the tokenizer
+enc = tiktoken.get_encoding("gpt2")
+encode = lambda s: enc.encode(s, allowed_special={"<|endoftext|>"})
+decode = lambda l: enc.decode(l)
 
-# load the model
-print(f"moding the model from {config.out_dir}...")
-
-# initialize the model structure (must match training exactly!)
+# load the Model
+print(f"Loading model from {config.out_dir}...")
 model = FemtoGPT(
     vocab_size=config.vocab_size,
     n_embd=config.n_embd,
@@ -27,12 +23,11 @@ model = FemtoGPT(
     dropout=config.dropout,
 )
 
-# load the trained weights
 ckpt_path = f"{config.out_dir}/ckpt.pt"
 try:
     checkpoint = torch.load(ckpt_path, map_location=device)
     model.load_state_dict(checkpoint)
-    print("weight loaded successfully")
+    print("Weights loaded successfully ✔")
 except FileNotFoundError:
     print(f"could not find {ckpt_path}")
     exit()
@@ -41,52 +36,48 @@ model.to(device)
 model.eval()
 
 
-# setup tokenizer
-enc = tiktoken.get_encoding("gpt-2")
-encode = lambda s: enc.encode(s, allowed_special={"<|endoftext|>"})
-decode = lambda l: enc.decode(l)
+# generation Function
+def generate(start_text, max_new_tokens=200, temperature=0.8, top_k=200):
+    # encode the prompt
+    start_ids = encode(start_text)
+    idx = torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...]
 
-
-# generation loop
-def generate(idx, max_new_tokens):
-    # idx is (B, T) array of indices in the current context
     for _ in range(max_new_tokens):
-        # 1. crop context if it's too long
+        # crop context
         idx_cond = idx[:, -config.block_size :]
-
-        # 2. get the predictions
+        # predict
         logits, _ = model(idx_cond)
+        logits = logits[:, -1, :] / temperature
 
-        # 3. focus only on the last time step
-        logits = logits[:, -1, :]
-
-        # 4. apply temperature
-        logits = logits / temperature
-
-        # 5. crop to top_k options (optional)
         if top_k is not None:
             v, _ = torch.topk(logits, top_k)
             logits[logits < v[:, [-1]]] = -float("Inf")
 
-        # 6. sample from the distribution
         probs = F.softmax(logits, dim=-1)
         idx_next = torch.multinomial(probs, num_samples=1)
-
-        # 7. append to the sequence
         idx = torch.cat((idx, idx_next), dim=1)
 
-    return idx
+    return decode(idx[0].tolist())
 
 
-# run
-print("tokens generation...\n")
-print("------------------------------------------------")
+# interactive Loop
+print("\n--- Interactive Mode ---")
+print("type a prompt and press enter, type 'exit' to quit\n")
 
-start_ids = encode(start_prompt)
-x = torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...]
+while True:
+    user_input = input("You: ")
+    if user_input.lower() in ["exit", "quit"]:
+        break
 
-with torch.no_grad():
-    for k in range(num_samples):
-        y = generate(x, max_new_tokens)
-        print(decode(y[0].tolist()))
-        print("------------------------------------------------")
+    if user_input.strip() == "":
+        continue
+
+    print("FemtoGPT: ", end="", flush=True)
+
+    # generate and print
+    response = generate(user_input, max_new_tokens=150, temperature=0.8)
+
+    # remove the prompt from the echo
+    # the simple generate() returns (prompt + new), so we slice it for display
+    print(response[len(user_input) :])
+    print("-" * 50)
