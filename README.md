@@ -20,6 +20,7 @@ I built this project to deepen my understanding of the Transformer architecture 
 
 * **From Scratch:** The model is defined purely in PyTorch `nn.Module`.
 * **Training:** Trained on the three major works of Fyodor Dostoevsky, capable of generating infinite text in his style.
+* **Interactive Generation:** Includes a CLI sampling script that allows you to prompt the model and chat with it in real-time.
 * **Simple:** I tried to keep it as simple as possible without adding extra complexity to Karpathy's repo, while attempting to optimize specific code pieces.
 
 ## Install
@@ -38,11 +39,11 @@ First, download the Dostoevsky dataset and tokenize it into binary files (`train
 python data/dostoevsky/prepare.py
 ```
 
-### 2\. Configuration
+### 2 Configuration
 
 You can adjust hyperparameters (like `n_layer`, `batch_size`, `device`) in the `config.py` file. The project is set up by default to auto-detect your hardware (CUDA, MPS, or CPU).
 
-### 3\. Train
+### 3 Train
 
 Start the training loop. This will utilize your GPU (if available) to train the model and save checkpoints to the `out/` directory.
 
@@ -50,9 +51,9 @@ Start the training loop. This will utilize your GPU (if available) to train the 
 python train.py
 ```
 
-### 4\. Generate Text
+### 4 Generate Text (Interactive)
 
-Once training is complete, you can generate new text samples.
+Once training is complete, run the sampler to start an interactive session
 
 ```bash
 python sample.py
@@ -65,9 +66,8 @@ python sample.py
 ├── config.py           # Hyperparameters and device settings
 ├── model.py            # The GPT Architecture (Attention, FeedForward, Blocks)
 ├── train.py            # Training loop and loss estimation
-├── sample.py           # Text generation script
+├── sample.py           # Interactive text generation script
 ├── data/
 │   └── dostoevsky/     # Data preparation scripts and raw text
 └── out/                # Saved model checkpoints
 ```
-
