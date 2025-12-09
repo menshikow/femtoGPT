@@ -39,7 +39,7 @@ def test_full_model():
     # subtract position embeddings to get the "non-embedding" count (often reported in papers)
     n_params_non_emb = n_params - (block_size * n_embd) - (vocab_size * n_embd)
 
-    print(f"✔ total parameters: {n_params/1e6:.2f} million")
+    print(f"✔ total parameters: {n_params / 1e6:.2f} million")
 
     # 5. run forward pass (with targets to get loss)
     try:

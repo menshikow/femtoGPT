@@ -136,8 +136,8 @@ class Block(nn.Module):
         # + ... is the "residual connection"
         # we apply layernorm BEFORE the transformation (pre-norm)
 
-        x += self.sa(self.ln1(x))
-        x += self.ffwd(self.ln2(x))
+        x = x + self.sa(self.ln1(x))
+        x = x + self.ffwd(self.ln2(x))
         return x
 
 

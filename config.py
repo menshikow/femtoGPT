@@ -25,12 +25,14 @@ eval_iters = 200
 # -----------------------------------------------------------------------------
 out_dir = "out"
 
-# device detection
-if torch.cuda.is_available():
-    device = "cuda"
-elif torch.backends.mps.is_available():
-    device = "mps"
-else:
-    device = "cpu"
 
-print(f"--> configured to use: {device}")
+# device detection
+def detec_divce():
+    if torch.cuda.is_available():
+        device = "cuda"
+    elif torch.backends.mps.is_available():
+        device = "mps"
+    else:
+        device = "cpu"
+
+    print(f"--> configured to use: {device}")
