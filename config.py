@@ -27,7 +27,7 @@ out_dir = "out"
 
 
 # device detection
-def detec_divce():
+def detect_divce():
     if torch.cuda.is_available():
         device = "cuda"
     elif torch.backends.mps.is_available():
@@ -36,3 +36,5 @@ def detec_divce():
         device = "cpu"
 
     print(f"--> configured to use: {device}")
+
+    return device

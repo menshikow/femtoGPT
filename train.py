@@ -12,25 +12,17 @@ import config
 
 # I/O
 os.makedirs(config.out_dir, exist_ok=True)
-eval_interval = 200  # how often to check validation loss
-log_interval = 10  # how often to print training stats
-eval_iters = 200  # how many batches to use for estimating loss
 
 # data
-batch_size = 32  # how many independent sequences to process in parallel
-block_size = 256  # maxim context length for predictions
-
-# model (very small but faster to train)
-n_layer = 6  # layers
-n_head = 6  # heads
-n_embd = 384  # 384 embedding dimension
-dropout = config.dropout
-vocab_size = config.vocab_size
+# We pull these directly from config now, so we don't have duplicate variables
+batch_size = config.batch_size
+block_size = config.block_size
 
 # optimizer
 learning_rate = config.learning_rate
 max_iters = config.max_iters
-device = config.detec_divce()  # use device from config
+
+device = config.detect_divce()
 
 # -----------------------------------------------------------------------------
 # data-loader
@@ -66,8 +58,8 @@ def estimate_loss():
     out = {}
     model.eval()  # switch to evaluation mode
     for split in ["train", "val"]:
-        losses = torch.zeros(eval_iters)
-        for k in range(eval_iters):
+        losses = torch.zeros(config.eval_iters)
+        for k in range(config.eval_iters):
             X, Y = get_batch(split)
             logits, loss = model(X, Y)
             losses[k] = loss.item()
@@ -78,6 +70,7 @@ def estimate_loss():
 
 # --- initialize model ---
 print("initializing model...")
+# Purely using config variables now
 model = FemtoGPT(
     vocab_size=config.vocab_size,
     n_embd=config.n_embd,
@@ -97,7 +90,6 @@ print(f"number of parameters: {n_params / 1e6:.2f} million")
 # -----------------------------------------------------------------------------
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
-
 # -----------------------------------------------------------------------------
 # --- training loop ---
 # -----------------------------------------------------------------------------
@@ -106,7 +98,7 @@ start_time = time.time()
 
 for iter in range(max_iters):
     # every once in a while, evaluate the loss on train and val sets
-    if iter % eval_interval == 0 or iter == max_iters - 1:
+    if iter % config.eval_interval == 0 or iter == max_iters - 1:
         losses = estimate_loss()
         print(
             f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}"
