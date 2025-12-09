@@ -50,11 +50,9 @@ Start the training loop. This will utilize your GPU (if available) to train the 
 python train.py
 ```
 
-*Note: On an M-series Mac or NVIDIA GPU, the "Baby GPT" config should reach a good loss (\< 3.0) in about 15 minutes.*
-
 ### 4\. Generate Text
 
-Once training is complete (or if you have a `ckpt.pt` file), you can generate new text samples.
+Once training is complete, you can generate new text samples.
 
 ```bash
 python sample.py
