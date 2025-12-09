@@ -26,3 +26,50 @@ I built this project to deepen my understanding of the Transformer architecture 
 
 ```bash
 pip install torch numpy transformers datasets tiktoken wandb tqdm
+````
+
+## Usage
+
+### 1\. Prepare the Data
+
+First, download the Dostoevsky dataset and tokenize it into binary files (`train.bin` and `val.bin`) that the model can read.
+
+```bash
+python data/dostoevsky/prepare.py
+```
+
+### 2\. Configuration
+
+You can adjust hyperparameters (like `n_layer`, `batch_size`, `device`) in the `config.py` file. The project is set up by default to auto-detect your hardware (CUDA, MPS, or CPU).
+
+### 3\. Train
+
+Start the training loop. This will utilize your GPU (if available) to train the model and save checkpoints to the `out/` directory.
+
+```bash
+python train.py
+```
+
+*Note: On an M-series Mac or NVIDIA GPU, the "Baby GPT" config should reach a good loss (\< 3.0) in about 15 minutes.*
+
+### 4\. Generate Text
+
+Once training is complete (or if you have a `ckpt.pt` file), you can generate new text samples.
+
+```bash
+python sample.py
+```
+
+## Project Structure
+
+```text
+.
+├── config.py           # Hyperparameters and device settings
+├── model.py            # The GPT Architecture (Attention, FeedForward, Blocks)
+├── train.py            # Training loop and loss estimation
+├── sample.py           # Text generation script
+├── data/
+│   └── dostoevsky/     # Data preparation scripts and raw text
+└── out/                # Saved model checkpoints
+```
+
