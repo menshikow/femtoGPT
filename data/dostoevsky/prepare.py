@@ -1,5 +1,4 @@
 import os
-from turtle import down, end_fill
 import requests
 import tiktoken
 import numpy as np
@@ -48,7 +47,7 @@ def download_and_clean():
 if __name__ == "__main__":
     # get the data
     data = download_and_clean()
-    print(f"total dataset size {len(data)/1024/1024:.2f} MB")
+    print(f"total dataset size {len(data) / 1024 / 1024:.2f} MB")
 
     # save the raw text
     input_file_path = os.path.join(os.path.dirname(__file__), "input.txt")
