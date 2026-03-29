@@ -41,16 +41,45 @@ def test_full_model():
 
     print(f"✔ total parameters: {n_params / 1e6:.2f} million")
 
-    # 5. run forward pass (with targets to get loss)
+    # 5. run forward pass (without targets)
     try:
-        logits, loss = model(dummy_input, dummy_targets)
-        print(f"✔ forward pass successful")
+        logits, loss = model(dummy_input)
+        expected_logits_shape = (batch_size, seq_len, vocab_size)
+
+        assert logits.shape == expected_logits_shape, (
+            f"unexpected logits shape without targets: {logits.shape}, "
+            f"expected: {expected_logits_shape}"
+        )
+        assert loss is None, "loss should be None when targets are not provided"
+
+        print("✔ forward pass without targets successful")
         print(
             f"   logits shape: {logits.shape} (expected: {batch_size}, {seq_len}, {vocab_size})"
         )
+        print("   loss value:   None (as expected)")
+    except Exception as e:
+        print(f"❌ forward pass without targets failed: {e}")
+        return
+
+    # 6. run forward pass (with targets to get loss)
+    try:
+        logits, loss = model(dummy_input, dummy_targets)
+        expected_logits_shape = (batch_size * seq_len, vocab_size)
+
+        assert logits.shape == expected_logits_shape, (
+            f"unexpected logits shape with targets: {logits.shape}, "
+            f"expected: {expected_logits_shape}"
+        )
+        assert loss is not None, "loss should be returned when targets are provided"
+        assert loss.ndim == 0, "loss should be a scalar tensor"
+
+        print("✔ forward pass with targets successful")
+        print(
+            f"   logits shape: {logits.shape} (expected: {batch_size * seq_len}, {vocab_size})"
+        )
         print(f"   loss value:   {loss.item():.4f}")
     except Exception as e:
-        print(f"❌ forward pass failed: {e}")
+        print(f"❌ forward pass with targets failed: {e}")
         return
 
     print("\n--- system all green! ready for training ---")
