@@ -27,7 +27,7 @@ out_dir = "out"
 
 
 # device detection
-def detect_divce():
+def detect_device():
     if torch.cuda.is_available():
         device = "cuda"
     elif torch.backends.mps.is_available():

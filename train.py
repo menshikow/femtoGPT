@@ -22,7 +22,7 @@ block_size = config.block_size
 learning_rate = config.learning_rate
 max_iters = config.max_iters
 
-device = config.detect_divce()
+device = config.detect_device()
 
 # -----------------------------------------------------------------------------
 # data-loader
@@ -101,7 +101,8 @@ for iter in range(max_iters):
     if iter % config.eval_interval == 0 or iter == max_iters - 1:
         losses = estimate_loss()
         print(
-            f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}"
+            f"step {iter}: train loss {losses['train']:.4f}, val loss {
+                losses['val']:.4f}"
         )
 
     # sample a batch of data

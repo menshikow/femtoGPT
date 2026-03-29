@@ -5,7 +5,7 @@ from model import FemtoGPT
 import config
 
 # configuration
-device = config.detect_divce()
+device = config.detect_device()
 
 # load the tokenizer
 enc = tiktoken.get_encoding("gpt2")
