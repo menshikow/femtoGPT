@@ -7,11 +7,9 @@ https://github.com/huggingface/transformers/blob/main/src/transformers/models/gp
 """
 
 import math
-from numpy import block
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from transformers import ClassifierFreeGuidanceLogitsProcessor
 
 # TODO: move to config file later
 block_size = 1024
@@ -103,7 +101,7 @@ class CausalSelfAttention(nn.Module):
 class FeedForward(nn.Module):
     """a simple linear layer followed by a non-linearity"""
 
-    def __init__(self, n_embd, n_head, dropout=0.1):
+    def __init__(self, n_embd, dropout=0.1):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(n_embd, 4 * n_embd),
@@ -126,7 +124,7 @@ class Block(nn.Module):
         self.sa = CausalSelfAttention(n_embd, n_head, block_size, dropout)
 
         # 2. computation (feed-forward)
-        self.ffwd = FeedForward(n_embd, dropout)
+        self.ffwd = FeedForward(n_embd, dropout=dropout)
 
         # 3. layer normalization (pre-norm formulation)
         self.ln1 = nn.LayerNorm(n_embd)
