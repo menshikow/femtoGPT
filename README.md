@@ -27,7 +27,7 @@ I built this project to deepen my understanding of the Transformer architecture 
 
 ```bash
 pip install torch numpy transformers datasets tiktoken wandb tqdm
-````
+```
 
 ## Usage
 
@@ -43,7 +43,15 @@ python data/dostoevsky/prepare.py
 
 You can adjust hyperparameters (like `n_layer`, `batch_size`, `device`) in the `config.py` file. The project is set up by default to auto-detect your hardware (CUDA, MPS, or CPU).
 
-### 3 Train
+### 3 Smoke Test (Optional)
+
+Before full training, run a quick model integrity check:
+
+```bash
+python test_check.py
+```
+
+### 4 Train
 
 Start the training loop. This will utilize your GPU (if available) to train the model and save checkpoints to the `out/` directory.
 
@@ -51,7 +59,7 @@ Start the training loop. This will utilize your GPU (if available) to train the 
 python train.py
 ```
 
-### 4 Generate Text (Interactive)
+### 5 Generate Text (Interactive)
 
 Once training is complete, run the sampler to start an interactive session
 
